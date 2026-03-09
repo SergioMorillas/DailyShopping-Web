@@ -66,7 +66,7 @@ export function ListaEspecifica() {
       <div className="sticky top-0 z-10 bg-gray-50 pt-6 pb-4 -mx-4 px-4">
         <div className="flex items-center gap-3 mb-3">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/listas')}
             className="p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
           >
             <ArrowLeft size={22} />

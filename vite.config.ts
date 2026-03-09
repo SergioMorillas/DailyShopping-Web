@@ -5,6 +5,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/api/auth': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      '/api/listas': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
       '/api/mercadona': {
         target: 'https://7uzjkl1dj0-dsn.algolia.net',
         changeOrigin: true,

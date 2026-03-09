@@ -6,12 +6,14 @@ import { ListaCard } from '../components/ListaCard'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { EmptyState } from '../components/EmptyState'
 import { useAppStore } from '../store/useAppStore'
+import { useAuthStore } from '../store/useAuthStore'
 import { useCases } from '../../container'
 import { ListaCompra } from '../../domain/entities/ListaCompra'
 
 export function PrincipalListas() {
   const navigate = useNavigate()
   const { listas, setListas, eliminarListaDelStore } = useAppStore()
+  const user = useAuthStore(s => s.user)
   const [loading, setLoading] = useState(true)
   const [busqueda, setBusqueda] = useState('')
   const [listasFiltradas, setListasFiltradas] = useState<ListaCompra[]>([])
@@ -47,7 +49,7 @@ export function PrincipalListas() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Mis Listas</h1>
-            <p className="text-sm text-gray-500">{listas.length} lista{listas.length !== 1 ? 's' : ''}</p>
+            <p className="text-sm text-gray-500">Hola, {user?.username} · {listas.length} lista{listas.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
 

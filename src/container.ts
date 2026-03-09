@@ -1,4 +1,4 @@
-import { IndexedDBListaRepository } from './infrastructure/persistence/IndexedDBListaRepository'
+import { HttpListaRepository } from './infrastructure/http/HttpListaRepository'
 import { MercadonaAdapter } from './infrastructure/supermercados/MercadonaAdapter'
 import { AlcampoAdapter } from './infrastructure/supermercados/AlcampoAdapter'
 import { DiaAdapter } from './infrastructure/supermercados/DiaAdapter'
@@ -16,11 +16,10 @@ import { JuegoPreciosService } from './domain/services/JuegoPreciosService'
 import { PrecioCalculatorService } from './domain/services/PrecioCalculatorService'
 import { SupermercadoDisponible } from './domain/entities/SupermercadoDisponible'
 import { ISupermercadoPort } from './domain/ports/ISupermercadoPort'
+import { useAuthStore } from './presentation/store/useAuthStore'
 
-// Repositories
-const listaRepo = new IndexedDBListaRepository()
+const listaRepo = new HttpListaRepository(() => useAuthStore.getState().token)
 
-// Supermarket adapters
 const supermercadoAdapters = new Map<SupermercadoDisponible, ISupermercadoPort>([
   ['Mercadona', new MercadonaAdapter()],
   ['Alcampo', new AlcampoAdapter()],
@@ -29,7 +28,6 @@ const supermercadoAdapters = new Map<SupermercadoDisponible, ISupermercadoPort>(
   ['Carrefour', new CarrefourAdapter()],
 ])
 
-// Use cases
 export const useCases = {
   obtenerListas: new ObtenerListas(listaRepo),
   crearLista: new CrearLista(listaRepo),
@@ -41,7 +39,6 @@ export const useCases = {
   compararPrecios: new CompararPrecios(supermercadoAdapters),
 }
 
-// Domain services
 export const services = {
   juego: new JuegoPreciosService(),
   precios: new PrecioCalculatorService(),

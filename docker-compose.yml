@@ -1,9 +1,31 @@
 services:
-  daily-shopping:
-    build: .
-    container_name: daily-shopping
+  backend:
+    build:
+      context: ./server
+    container_name: daily-shopping-backend
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET:-daily-shopping-secret-change-in-prod}
+      - PORT=3001
+      - DATA_DIR=/data
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+    container_name: daily-shopping-frontend
     ports:
       - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost/"]

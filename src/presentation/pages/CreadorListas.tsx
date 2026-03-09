@@ -41,7 +41,7 @@ export function CreadorListas() {
       {/* Header */}
       <div className="flex items-center gap-3 pt-8 mb-8">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/listas')}
           className="p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
         >
           <ArrowLeft size={22} />
