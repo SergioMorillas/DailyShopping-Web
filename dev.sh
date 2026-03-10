@@ -6,6 +6,9 @@
 
 export PATH="/home/smorillas/.config/JetBrains/WebStorm2025.3/node/versions/24.14.0/bin:$PATH"
 
+# Usar el cargo de rustup en lugar del del sistema (necesita ≥1.78 para edition2024)
+export PATH="/home/smorillas/.cargo/bin:$PATH"
+
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 # Matar procesos que puedan estar usando los puertos
@@ -24,7 +27,7 @@ trap cleanup INT TERM
 # Arrancar backend
 echo ""
 echo "▶  Arrancando backend  → http://localhost:3001"
-cd "$ROOT/server" && npm run dev &
+cd "$ROOT/server-rust" && cargo run &
 BACKEND_PID=$!
 
 # Esperar a que el backend esté listo

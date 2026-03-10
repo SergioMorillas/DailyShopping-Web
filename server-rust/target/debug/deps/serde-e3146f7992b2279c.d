@@ -1,0 +1,14 @@
+/home/smorillas/WebstormProjects/untitled/server-rust/target/debug/deps/serde-e3146f7992b2279c.d: /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/smorillas/WebstormProjects/untitled/server-rust/target/debug/build/serde-c80382b27f70d824/out/private.rs
+
+/home/smorillas/WebstormProjects/untitled/server-rust/target/debug/deps/libserde-e3146f7992b2279c.rlib: /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/smorillas/WebstormProjects/untitled/server-rust/target/debug/build/serde-c80382b27f70d824/out/private.rs
+
+/home/smorillas/WebstormProjects/untitled/server-rust/target/debug/deps/libserde-e3146f7992b2279c.rmeta: /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/smorillas/WebstormProjects/untitled/server-rust/target/debug/build/serde-c80382b27f70d824/out/private.rs
+
+/home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/smorillas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/smorillas/WebstormProjects/untitled/server-rust/target/debug/build/serde-c80382b27f70d824/out/private.rs:
+
+# env-dep:OUT_DIR=/home/smorillas/WebstormProjects/untitled/server-rust/target/debug/build/serde-c80382b27f70d824/out
