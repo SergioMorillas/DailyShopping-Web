@@ -109,13 +109,13 @@ export function JuegoPrecios() {
       <Layout>
         <div className="pt-4">
           {producto && (
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div className="bg-gradient-to-b from-[#04bcd4]/5 to-white rounded-2xl overflow-hidden mb-6" style={{ boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
               {/* Imagen del producto */}
-              <div className="bg-gray-50 p-8 flex items-center justify-center">
+              <div className="bg-gradient-to-b from-[#f0fbfc] to-white p-10 flex items-center justify-center min-h-44">
                 <img
                   src={producto.image}
                   alt={producto.name}
-                  className="h-40 object-contain"
+                  className="h-44 object-contain drop-shadow-md"
                   onError={(e) => { e.currentTarget.style.display = 'none' }}
                 />
               </div>
@@ -133,7 +133,7 @@ export function JuegoPrecios() {
                   {Array.from({ length: maxIntentos }).map((_, i) => (
                     <div
                       key={i}
-                      className={`h-1.5 flex-1 rounded-full ${
+                      className={`w-8 h-1.5 rounded-full ${
                         i < intentos.length
                           ? services.juego.esAcierto(intentos[i].resultado)
                             ? 'bg-[#04bcd4]'
@@ -165,14 +165,14 @@ export function JuegoPrecios() {
                 {/* Estado: ganado */}
                 {estado === 'ganado' && (
                   <div className="text-center py-4">
-                    <Trophy size={40} className="text-[#BBA53D] mx-auto mb-2" />
-                    <p className="font-bold text-gray-900 text-lg">¡Correcto!</p>
-                    <p className="text-[#04bcd4] font-bold text-2xl mt-1">
+                    <Trophy size={56} className="mx-auto mb-3 drop-shadow-lg" style={{ color: '#f59e0b' }} />
+                    <p className="font-black text-gray-900 text-xl">Correcto</p>
+                    <p className="price-display font-black text-3xl mt-1" style={{ color: '#f59e0b' }}>
                       {producto.price.toFixed(2)} €
                     </p>
                     <button
                       onClick={cargarProducto}
-                      className="mt-4 w-full py-3 bg-[#04bcd4] text-white rounded-2xl font-bold hover:bg-[#03aabf] active:scale-95 transition-all"
+                      className="mt-4 w-full py-3.5 bg-[#04bcd4] text-white rounded-2xl font-black hover:bg-[#0397aa] active:scale-95 transition-all shadow-lg shadow-[#04bcd4]/30"
                     >
                       Siguiente producto
                     </button>
@@ -198,7 +198,7 @@ export function JuegoPrecios() {
                   <div>
                     <div className="flex gap-2">
                       <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">€</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-black text-lg">€</span>
                         <input
                           type="number"
                           step="0.01"
@@ -207,20 +207,20 @@ export function JuegoPrecios() {
                           value={inputValor}
                           onChange={(e) => { setInputValor(e.target.value); setError('') }}
                           onKeyDown={(e) => e.key === 'Enter' && handleAdivinar()}
-                          className="w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-base font-semibold focus:outline-none focus:border-[#04bcd4] focus:ring-2 focus:ring-[#04bcd4]/20 transition-all"
+                          className="w-full pl-10 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-2xl text-lg font-black focus:outline-none focus:border-[#04bcd4] focus:ring-2 focus:ring-[#04bcd4]/20 transition-all price-display"
                           autoFocus
                         />
                       </div>
                       <button
                         onClick={handleAdivinar}
                         disabled={!inputValor}
-                        className="px-5 py-3 bg-[#04bcd4] text-white rounded-2xl font-bold hover:bg-[#03aabf] active:scale-95 disabled:opacity-60 transition-all"
+                        className="px-5 py-3.5 bg-[#04bcd4] text-white rounded-2xl font-black hover:bg-[#0397aa] active:scale-95 disabled:opacity-60 transition-all shadow-md shadow-[#04bcd4]/30"
                       >
                         Adivinar
                       </button>
                     </div>
-                    {error && <p className="text-red-500 text-sm mt-1.5">{error}</p>}
-                    <p className="text-xs text-[#888888] text-center mt-2">
+                    {error && <p className="text-red-500 text-sm mt-1.5 font-semibold">{error}</p>}
+                    <p className="text-xs text-gray-400 font-semibold text-center mt-2">
                       Intento {intentos.length + 1} de {maxIntentos} · Margen ±25%
                     </p>
                   </div>

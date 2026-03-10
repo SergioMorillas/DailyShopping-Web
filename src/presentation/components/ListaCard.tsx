@@ -1,6 +1,6 @@
 import { ListaCompra } from '../../domain/entities/ListaCompra'
 import { useNavigate } from 'react-router-dom'
-import { Trash2, ChevronRight, ShoppingBag, Calendar } from 'lucide-react'
+import { Trash2, ChevronRight } from 'lucide-react'
 import { SUPERMERCADO_COLORES } from '../../domain/entities/SupermercadoDisponible'
 
 interface ListaCardProps {
@@ -13,52 +13,54 @@ export function ListaCard({ lista, onEliminar }: ListaCardProps) {
   const color = SUPERMERCADO_COLORES[lista.supermercado] ?? '#04bcd4'
 
   return (
-    <div
-      className="bg-white rounded-2xl shadow-sm overflow-hidden active:scale-[0.99] transition-all"
-      style={{ borderLeft: `4px solid ${color}` }}
-    >
-      <button
-        className="w-full text-left p-4 pr-2"
-        onClick={() => navigate(`/lista/${lista.id}`)}
-      >
-        <div className="flex items-start justify-between gap-2">
+    <div className="bg-white rounded-3xl overflow-hidden hover:shadow-md transition-all duration-200 active:scale-[0.99]"
+      style={{ boxShadow: `0 2px 12px ${color}18` }}>
+
+      {/* Supermarket color strip */}
+      <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg, ${color}, ${color}60)` }} />
+
+      <button className="w-full text-left p-4 pb-3" onClick={() => navigate(`/lista/${lista.id}`)}>
+        <div className="flex items-start gap-3">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <ShoppingBag size={14} className="text-[#04bcd4] flex-shrink-0" />
-              <span className="text-xs font-bold text-[#04bcd4] uppercase tracking-wider truncate">
-                {lista.supermercado}
-              </span>
-            </div>
-            <p className="font-bold text-gray-900 text-base leading-tight truncate">{lista.nombre}</p>
-            <div className="flex items-center gap-1 mt-1.5">
-              <Calendar size={12} className="text-[#888888]" />
-              <span className="text-xs text-[#888888]">{lista.fechaFormateada}</span>
-            </div>
+            {/* Supermarket badge */}
+            <span className="inline-block text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-2"
+              style={{ backgroundColor: `${color}18`, color }}>
+              {lista.supermercado}
+            </span>
+            {/* Name */}
+            <h3 className="font-extrabold text-gray-900 text-[17px] leading-snug truncate pr-2">
+              {lista.nombre}
+            </h3>
+            <p className="text-xs text-gray-400 mt-1 font-medium">{lista.fechaFormateada}</p>
           </div>
 
-          <div className="flex flex-col items-end gap-1 flex-shrink-0">
-            <span className="text-xl font-bold text-gray-900">{lista.precioTotal.toFixed(2)} €</span>
-            <span className="text-xs text-[#888888]">{lista.cantidadProductos} art.</span>
+          {/* Price block */}
+          <div className="text-right flex-shrink-0">
+            <div className="price-display">
+              <span className="text-2xl font-black text-gray-900 leading-none">{lista.precioTotal.toFixed(2)}</span>
+              <span className="text-base font-bold text-gray-400"> €</span>
+            </div>
+            <p className="text-xs text-gray-400 font-medium mt-0.5">
+              {lista.cantidadProductos} artículo{lista.cantidadProductos !== 1 ? 's' : ''}
+            </p>
           </div>
         </div>
       </button>
 
-      {/* Actions row */}
-      <div className="flex border-t border-gray-100">
+      {/* Actions */}
+      <div className="flex divide-x divide-gray-100 border-t border-gray-100">
         <button
           onClick={() => lista.id && onEliminar(lista.id)}
-          className="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-red-400 hover:bg-red-50 active:bg-red-100 transition-colors text-xs font-semibold"
+          className="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[11px] font-bold text-red-400 hover:bg-red-50 active:bg-red-100 transition-colors"
         >
-          <Trash2 size={15} />
-          Eliminar
+          <Trash2 size={13} /> Eliminar
         </button>
-        <div className="w-px bg-gray-100" />
         <button
           onClick={() => navigate(`/lista/${lista.id}`)}
-          className="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[#04bcd4] hover:bg-[#04bcd4]/5 active:bg-[#04bcd4]/10 transition-colors text-xs font-semibold"
+          className="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[11px] font-bold hover:bg-[#04bcd4]/5 transition-colors"
+          style={{ color: '#04bcd4' }}
         >
-          Ver lista
-          <ChevronRight size={15} />
+          Abrir lista <ChevronRight size={13} />
         </button>
       </div>
     </div>

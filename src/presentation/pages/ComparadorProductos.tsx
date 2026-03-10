@@ -67,10 +67,14 @@ export function ComparadorProductos() {
               .sort((a, b) => (a.productos[0]?.price ?? 999) - (b.productos[0]?.price ?? 999))
               .map(r => (
                 <section key={r.supermercado}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: SUPERMERCADO_COLORES[r.supermercado] }} />
-                    <h2 className="font-bold text-gray-800">{r.supermercado}</h2>
-                    <span className="text-xs text-[#888888]">desde {r.productos[0].price.toFixed(2)} €</span>
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <div className="w-3.5 h-3.5 rounded-full shadow-sm" style={{ backgroundColor: SUPERMERCADO_COLORES[r.supermercado] }} />
+                    <h2 className="font-black text-gray-900 text-sm">{r.supermercado}</h2>
+                    {r.productos.length > 0 && (
+                      <span className="price-display text-xs font-bold text-gray-400">
+                        desde {r.productos[0].price.toFixed(2)} €
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-col gap-2">
                     {r.productos.slice(0, 3).map(p => <ProductoCard key={p.id} producto={p} modo="comparador" />)}

@@ -81,31 +81,35 @@ export function ListaEspecifica() {
         }
       />
 
-      {/* Stats bar — 4 columns with cyan background */}
-      <div className="bg-[#04bcd4] text-white">
-        <div className="max-w-2xl mx-auto grid grid-cols-4 divide-x divide-white/20">
-          {[
-            { label: 'Media', value: `${listaActual.precioPromedio.toFixed(2)}€` },
-            { label: 'Pendiente', value: `${listaActual.precioSinMarcar.toFixed(2)}€` },
-            { label: 'En carro', value: `${listaActual.precioMarcado.toFixed(2)}€` },
-            { label: 'Total', value: `${listaActual.precioTotal.toFixed(2)}€` },
-          ].map(({ label, value }) => (
-            <div key={label} className="flex flex-col items-center py-2.5 px-1">
-              <span className="text-[10px] font-semibold text-white/80 uppercase tracking-wide">{label}</span>
-              <span className="text-sm font-bold">{value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Progress bar */}
-        {total > 0 && (
-          <div className="max-w-2xl mx-auto px-3 pb-2">
-            <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
-              <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${(marcados / total) * 100}%` }} />
-            </div>
-            <p className="text-xs text-white/80 text-center mt-1">{marcados} de {total} artículos marcados</p>
+      {/* Stats strip — polished gradient */}
+      <div style={{ background: 'linear-gradient(135deg, #04bcd4 0%, #0397aa 100%)' }}
+        className="shadow-md shadow-[#04bcd4]/20">
+        <div className="max-w-2xl mx-auto">
+          <div className="grid grid-cols-4 divide-x divide-white/20">
+            {[
+              { label: 'Media', value: listaActual.precioPromedio.toFixed(2) },
+              { label: 'Pendiente', value: listaActual.precioSinMarcar.toFixed(2) },
+              { label: 'En carro', value: listaActual.precioMarcado.toFixed(2) },
+              { label: 'Total', value: listaActual.precioTotal.toFixed(2) },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col items-center py-3 px-1">
+                <span className="text-[9px] font-black text-white/70 uppercase tracking-widest mb-0.5">{label}</span>
+                <span className="price-display text-base font-black text-white leading-none">{value} €</span>
+              </div>
+            ))}
           </div>
-        )}
+          {total > 0 && (
+            <div className="px-4 pb-3">
+              <div className="h-1 bg-white/20 rounded-full overflow-hidden">
+                <div className="h-full bg-white rounded-full transition-all duration-700"
+                  style={{ width: `${(marcados / total) * 100}%` }} />
+              </div>
+              <p className="text-[10px] text-white/70 font-semibold text-center mt-1.5">
+                {marcados} de {total} · {Math.round((marcados / total) * 100)}% completado
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <Layout>
