@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import db from '../database'
+import { authMiddleware, AuthRequest } from '../middleware/auth'
 
 const router = Router()
 const JWT_SECRET = process.env.JWT_SECRET || 'daily-shopping-secret-dev'
@@ -45,6 +46,23 @@ router.post('/login', (req: Request, res: Response): void => {
   }
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '30d' })
   res.json({ token, user: { id: user.id, username: user.username, email: user.email } })
+})
+
+router.put('/password', authMiddleware, (req: AuthRequest, res: Response): void => {
+  const { currentPassword, newPassword } = req.body
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: 'Campos requeridos' }); return
+  }
+  if (newPassword.length < 6) {
+    res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' }); return
+  }
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get((req as AuthRequest).userId) as any
+  if (!user || !bcrypt.compareSync(currentPassword, user.password_hash)) {
+    res.status(401).json({ error: 'Contraseña actual incorrecta' }); return
+  }
+  const newHash = bcrypt.hashSync(newPassword, 10)
+  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(newHash, (req as AuthRequest).userId)
+  res.json({ ok: true })
 })
 
 export default router

@@ -13,6 +13,10 @@ export default defineConfig({
         target: 'http://localhost:3001',
         changeOrigin: true,
       },
+      '/api/stats': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
       '/api/mercadona': {
         target: 'https://7uzjkl1dj0-dsn.algolia.net',
         changeOrigin: true,

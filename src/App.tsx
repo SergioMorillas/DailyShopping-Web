@@ -8,6 +8,7 @@ import { ListaEspecifica } from './presentation/pages/ListaEspecifica'
 import { BuscadorProductos } from './presentation/pages/BuscadorProductos'
 import { ComparadorProductos } from './presentation/pages/ComparadorProductos'
 import { JuegoPrecios } from './presentation/pages/JuegoPrecios'
+import { Perfil } from './presentation/pages/Perfil'
 import { ProtectedRoute } from './presentation/components/ProtectedRoute'
 
 export function App() {
@@ -26,6 +27,7 @@ export function App() {
         <Route path="/lista/:id" element={<ProtectedRoute><ListaEspecifica /></ProtectedRoute>} />
         <Route path="/lista/:id/buscar" element={<ProtectedRoute><BuscadorProductos /></ProtectedRoute>} />
         <Route path="/comparar" element={<ProtectedRoute><ComparadorProductos /></ProtectedRoute>} />
+        <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
