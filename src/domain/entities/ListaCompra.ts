@@ -1,6 +1,6 @@
 import { Producto } from './Producto'
 
-export type SupermercadoNombre = 'Mercadona' | 'Alcampo' | 'Dia' | 'BM' | 'Carrefour'
+export type SupermercadoNombre = 'Mercadona' | 'Alcampo' | 'Dia' | 'BM'
 
 export interface ListaCompraProps {
   id?: number

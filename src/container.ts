@@ -3,7 +3,6 @@ import { MercadonaAdapter } from './infrastructure/supermercados/MercadonaAdapte
 import { AlcampoAdapter } from './infrastructure/supermercados/AlcampoAdapter'
 import { DiaAdapter } from './infrastructure/supermercados/DiaAdapter'
 import { BMAdapter } from './infrastructure/supermercados/BMAdapter'
-import { CarrefourAdapter } from './infrastructure/supermercados/CarrefourAdapter'
 import { ObtenerListas } from './application/usecases/lista/ObtenerListas'
 import { CrearLista } from './application/usecases/lista/CrearLista'
 import { EliminarLista } from './application/usecases/lista/EliminarLista'
@@ -25,7 +24,6 @@ const supermercadoAdapters = new Map<SupermercadoDisponible, ISupermercadoPort>(
   ['Alcampo', new AlcampoAdapter()],
   ['Dia', new DiaAdapter()],
   ['BM', new BMAdapter()],
-  ['Carrefour', new CarrefourAdapter()],
 ])
 
 export const useCases = {

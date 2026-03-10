@@ -15,7 +15,7 @@ export class DiaAdapter implements ISupermercadoPort {
             name: p.display_name ?? '',
             image: p.image ? `https://www.dia.es${p.image}` : '',
             price: p.prices?.price ?? 0,
-            pricePerKilo: -1,
+            pricePerKilo: p.prices?.price_per_unit ?? -1,
             mass: -1,
             amount: 1,
             marked: false,

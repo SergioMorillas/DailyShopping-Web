@@ -14,7 +14,7 @@ export class BMAdapter implements ISupermercadoPort {
             id: String(p.ean),
             name: p.productData?.name ?? '',
             image: p.productData?.imageURL ?? '',
-            price: (p.priceData?.prices?.[0]?.value?.centAmount ?? 0) / 100,
+            price: p.priceData?.prices?.[0]?.value?.centAmount ?? 0,
             pricePerKilo: -1,
             mass: -1,
             amount: 1,
