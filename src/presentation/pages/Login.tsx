@@ -34,11 +34,11 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-emerald-950 to-gray-900 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-[#023d45] to-gray-900 flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
+          <div className="w-14 h-14 bg-[#04bcd4] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#04bcd4]/30">
             <ShoppingCart size={28} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white">Iniciar sesión</h1>
@@ -56,7 +56,7 @@ export function Login() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="tu@email.com"
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#04bcd4] focus:ring-2 focus:ring-[#04bcd4]/30 transition-all"
               />
             </div>
             <div>
@@ -68,7 +68,7 @@ export function Login() {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all pr-12"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#04bcd4] focus:ring-2 focus:ring-[#04bcd4]/30 transition-all pr-12"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                   {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -81,7 +81,7 @@ export function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 active:scale-95 disabled:opacity-60 transition-all mt-1"
+              className="w-full py-3.5 bg-[#04bcd4] text-white rounded-xl font-semibold hover:bg-[#03aabf] active:scale-95 disabled:opacity-60 transition-all mt-1"
             >
               {loading ? 'Entrando...' : 'Iniciar sesión'}
             </button>
@@ -89,7 +89,7 @@ export function Login() {
 
           <p className="text-center text-sm text-gray-500 mt-5">
             ¿No tienes cuenta?{' '}
-            <Link to="/registro" className="text-emerald-600 font-semibold hover:underline">
+            <Link to="/registro" className="text-[#04bcd4] font-semibold hover:underline">
               Regístrate
             </Link>
           </p>

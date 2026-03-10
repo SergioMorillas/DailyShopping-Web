@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Search, PackagePlus, Check } from 'lucide-react'
+import { Search, PackagePlus, Check } from 'lucide-react'
+import { AppHeader } from '../components/AppHeader'
 import { Layout } from '../components/Layout'
 import { ProductoCard } from '../components/ProductoCard'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -94,115 +95,108 @@ export function BuscadorProductos() {
   const sinResultados = buscado && !loading && resultados.length === 0 && !error
 
   return (
-    <Layout>
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-50 pt-6 pb-4 -mx-4 px-4">
-        <div className="flex items-center gap-3 mb-4">
-          <button
-            onClick={() => navigate(`/lista/${id}`)}
-            className="p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
-          >
-            <ArrowLeft size={22} />
-          </button>
-          <div>
-            <h1 className="font-bold text-lg text-gray-900">Buscar productos</h1>
-            {lista && <p className="text-xs text-gray-500">{lista.supermercado}</p>}
+    <>
+      <AppHeader
+        title={lista ? `${lista.supermercado}` : 'Buscar productos'}
+        showBack
+        onBack={() => navigate(`/lista/${id}`)}
+      />
+      <Layout>
+        <div className="pt-4 pb-2">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Buscar producto..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && buscar()}
+                className="w-full pl-10 pr-4 py-3 bg-white rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#04bcd4]/30 shadow-sm transition-all"
+                autoFocus
+              />
+            </div>
+            <button
+              onClick={buscar}
+              disabled={loading || !query.trim()}
+              className="px-5 py-3 bg-[#04bcd4] text-white rounded-2xl font-bold hover:bg-[#03aabf] active:scale-95 disabled:opacity-60 transition-all"
+            >
+              Buscar
+            </button>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Buscar producto..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && buscar()}
-              className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all"
-              autoFocus
+        {/* Toast de producto añadido */}
+        {customAdded && (
+          <div className="flex items-center gap-2 bg-[#04bcd4] text-white px-4 py-3 rounded-2xl mb-4 animate-pulse">
+            <Check size={18} />
+            <span className="text-sm font-medium">Producto personalizado añadido</span>
+          </div>
+        )}
+
+        {/* Results */}
+        {loading ? (
+          <LoadingSpinner text="Buscando productos..." />
+        ) : error ? (
+          <div className="flex flex-col gap-4">
+            <EmptyState
+              icon={<Search size={64} />}
+              title="Error de búsqueda"
+              description={error}
+              action={
+                <button
+                  onClick={() => setShowCustomForm(true)}
+                  className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-3 rounded-2xl font-medium hover:border-[#04bcd4] hover:text-[#04bcd4] transition-all"
+                >
+                  <PackagePlus size={18} />
+                  Añadir manualmente
+                </button>
+              }
             />
+            {showCustomForm && <CustomProductForm
+              nombre={customNombre}
+              precio={customPrecio}
+              onNombreChange={setCustomNombre}
+              onPrecioChange={setCustomPrecio}
+              onSubmit={handleAgregarPersonalizado}
+              onCancel={() => setShowCustomForm(false)}
+            />}
           </div>
-          <button
-            onClick={buscar}
-            disabled={loading || !query.trim()}
-            className="px-5 py-3 bg-primary-600 text-white rounded-2xl font-medium hover:bg-primary-700 active:scale-95 disabled:opacity-60 transition-all"
-          >
-            Buscar
-          </button>
-        </div>
-      </div>
-
-      {/* Toast de producto añadido */}
-      {customAdded && (
-        <div className="flex items-center gap-2 bg-primary-600 text-white px-4 py-3 rounded-2xl mb-4 animate-pulse">
-          <Check size={18} />
-          <span className="text-sm font-medium">Producto personalizado añadido</span>
-        </div>
-      )}
-
-      {/* Results */}
-      {loading ? (
-        <LoadingSpinner text="Buscando productos..." />
-      ) : error ? (
-        <div className="flex flex-col gap-4">
-          <EmptyState
-            icon={<Search size={64} />}
-            title="Error de búsqueda"
-            description={error}
-            action={
-              <button
-                onClick={() => setShowCustomForm(true)}
-                className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-3 rounded-2xl font-medium hover:border-primary-400 hover:text-primary-600 transition-all"
-              >
-                <PackagePlus size={18} />
-                Añadir manualmente
-              </button>
-            }
-          />
-          {showCustomForm && <CustomProductForm
-            nombre={customNombre}
-            precio={customPrecio}
-            onNombreChange={setCustomNombre}
-            onPrecioChange={setCustomPrecio}
-            onSubmit={handleAgregarPersonalizado}
-            onCancel={() => setShowCustomForm(false)}
-          />}
-        </div>
-      ) : sinResultados ? (
-        <div className="flex flex-col gap-4">
-          <EmptyState
-            icon={<Search size={64} />}
-            title="Sin resultados"
-            description={`No se encontró "${query}" en ${lista?.supermercado}`}
-            action={
-              <button
-                onClick={() => setShowCustomForm(true)}
-                className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-3 rounded-2xl font-medium hover:border-primary-400 hover:text-primary-600 transition-all"
-              >
-                <PackagePlus size={18} />
-                Añadir manualmente
-              </button>
-            }
-          />
-          {showCustomForm && <CustomProductForm
-            nombre={customNombre}
-            precio={customPrecio}
-            onNombreChange={setCustomNombre}
-            onPrecioChange={setCustomPrecio}
-            onSubmit={handleAgregarPersonalizado}
-            onCancel={() => setShowCustomForm(false)}
-          />}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {resultados.map((p) => (
-            <ProductoCard key={p.id} producto={p} modo="busqueda" onAgregar={agregarProducto} />
-          ))}
-        </div>
-      )}
-    </Layout>
+        ) : sinResultados ? (
+          <div className="flex flex-col gap-4">
+            <EmptyState
+              icon={<Search size={64} />}
+              title="Sin resultados"
+              description={`No se encontró "${query}" en ${lista?.supermercado}`}
+              action={
+                <button
+                  onClick={() => setShowCustomForm(true)}
+                  className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-3 rounded-2xl font-medium hover:border-[#04bcd4] hover:text-[#04bcd4] transition-all"
+                >
+                  <PackagePlus size={18} />
+                  Añadir manualmente
+                </button>
+              }
+            />
+            {showCustomForm && <CustomProductForm
+              nombre={customNombre}
+              precio={customPrecio}
+              onNombreChange={setCustomNombre}
+              onPrecioChange={setCustomPrecio}
+              onSubmit={handleAgregarPersonalizado}
+              onCancel={() => setShowCustomForm(false)}
+            />}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {resultados.map((p) => (
+              <ProductoCard key={p.id} producto={p} modo="busqueda" onAgregar={agregarProducto} />
+            ))}
+          </div>
+        )}
+      </Layout>
+    </>
   )
 }
 
@@ -217,9 +211,9 @@ interface CustomProductFormProps {
 
 function CustomProductForm({ nombre, precio, onNombreChange, onPrecioChange, onSubmit, onCancel }: CustomProductFormProps) {
   return (
-    <div className="bg-white rounded-2xl border border-primary-200 p-4 shadow-sm">
+    <div className="bg-white rounded-2xl border border-[#04bcd4]/30 p-4 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <PackagePlus size={18} className="text-primary-600" />
+        <PackagePlus size={18} className="text-[#04bcd4]" />
         <h3 className="font-semibold text-gray-900">Producto personalizado</h3>
       </div>
       <div className="flex flex-col gap-3">
@@ -228,7 +222,7 @@ function CustomProductForm({ nombre, precio, onNombreChange, onPrecioChange, onS
           placeholder="Nombre del producto"
           value={nombre}
           onChange={(e) => onNombreChange(e.target.value)}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#04bcd4] focus:ring-2 focus:ring-[#04bcd4]/20 transition-all"
           autoFocus
         />
         <div className="relative">
@@ -241,7 +235,7 @@ function CustomProductForm({ nombre, precio, onNombreChange, onPrecioChange, onS
             value={precio}
             onChange={(e) => onPrecioChange(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
-            className="w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all"
+            className="w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#04bcd4] focus:ring-2 focus:ring-[#04bcd4]/20 transition-all"
           />
         </div>
         <div className="flex gap-2">
@@ -254,7 +248,7 @@ function CustomProductForm({ nombre, precio, onNombreChange, onPrecioChange, onS
           <button
             onClick={onSubmit}
             disabled={!nombre.trim() || !precio}
-            className="flex-1 py-3 bg-primary-600 text-white rounded-xl text-sm font-medium hover:bg-primary-700 disabled:opacity-50 transition-all"
+            className="flex-1 py-3 bg-[#04bcd4] text-white rounded-xl text-sm font-medium hover:bg-[#03aabf] disabled:opacity-50 transition-all"
           >
             Añadir a la lista
           </button>

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, Search, X, ShoppingBag } from 'lucide-react'
+import { AppHeader } from '../components/AppHeader'
 import { Layout } from '../components/Layout'
 import { ListaCard } from '../components/ListaCard'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -16,6 +17,7 @@ export function PrincipalListas() {
   const user = useAuthStore(s => s.user)
   const [loading, setLoading] = useState(true)
   const [busqueda, setBusqueda] = useState('')
+  const [showSearch, setShowSearch] = useState(false)
   const [listasFiltradas, setListasFiltradas] = useState<ListaCompra[]>([])
 
   useEffect(() => {
@@ -29,89 +31,66 @@ export function PrincipalListas() {
     if (!busqueda.trim()) {
       setListasFiltradas(listas)
     } else {
-      const q = busqueda.toLowerCase()
-      setListasFiltradas(listas.filter((l) => l.nombre.toLowerCase().includes(q)))
+      setListasFiltradas(listas.filter((l) => l.nombre.toLowerCase().includes(busqueda.toLowerCase())))
     }
   }, [listas, busqueda])
 
-  const handleEliminar = useCallback(
-    async (id: number) => {
-      await useCases.eliminarLista.ejecutar(id)
-      eliminarListaDelStore(id)
-    },
-    [eliminarListaDelStore]
-  )
+  const handleEliminar = useCallback(async (id: number) => {
+    await useCases.eliminarLista.ejecutar(id)
+    eliminarListaDelStore(id)
+  }, [eliminarListaDelStore])
 
   return (
-    <Layout>
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-50 pt-8 pb-4 -mx-4 px-4">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Mis Listas</h1>
-            <p className="text-sm text-gray-500">Hola, {user?.username} · {listas.length} lista{listas.length !== 1 ? 's' : ''}</p>
+    <>
+      <AppHeader
+        title="Mis Listas"
+        showLogo
+        rightAction={
+          <button onClick={() => setShowSearch(s => !s)} className="w-10 h-10 flex items-center justify-center text-white hover:bg-white/10 rounded-xl transition-colors">
+            <Search size={22} />
+          </button>
+        }
+      />
+      <Layout>
+        <div className="pt-4 pb-2">
+          <p className="text-sm text-[#888888]">Hola, <span className="text-[#04bcd4] font-bold">{user?.username}</span> · {listas.length} lista{listas.length !== 1 ? 's' : ''}</p>
+        </div>
+
+        {showSearch && (
+          <div className="relative mb-3">
+            <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Buscar listas..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              autoFocus
+              className="w-full pl-10 pr-10 py-3 bg-white rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#04bcd4]/30 shadow-sm"
+            />
+            {busqueda && <button onClick={() => setBusqueda('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"><X size={16} /></button>}
           </div>
-        </div>
+        )}
 
-        {/* Search bar */}
-        <div className="relative">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Buscar listas..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all"
+        {loading ? <LoadingSpinner /> : listasFiltradas.length === 0 ? (
+          <EmptyState
+            icon={<ShoppingBag size={72} />}
+            title={busqueda ? 'Sin resultados' : '¡Sin listas aún!'}
+            description={busqueda ? `No hay listas con "${busqueda}"` : 'Crea tu primera lista pulsando el botón +'}
+            action={!busqueda ? <button onClick={() => navigate('/crear')} className="bg-[#04bcd4] text-white px-8 py-3 rounded-2xl font-bold hover:bg-[#03aabf] active:scale-95 transition-all">Nueva lista</button> : undefined}
           />
-          {busqueda && (
-            <button
-              onClick={() => setBusqueda('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-      </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {listasFiltradas.map((lista) => <ListaCard key={lista.id} lista={lista} onEliminar={handleEliminar} />)}
+          </div>
+        )}
 
-      {/* Content */}
-      {loading ? (
-        <LoadingSpinner />
-      ) : listasFiltradas.length === 0 ? (
-        <EmptyState
-          icon={<ShoppingBag size={64} />}
-          title={busqueda ? 'Sin resultados' : '¡Sin listas aún!'}
-          description={
-            busqueda
-              ? `No hay listas que coincidan con "${busqueda}"`
-              : 'Crea tu primera lista de la compra pulsando el botón +'
-          }
-          action={
-            !busqueda && (
-              <button
-                onClick={() => navigate('/crear')}
-                className="bg-primary-600 text-white px-6 py-3 rounded-2xl font-medium hover:bg-primary-700 active:scale-95 transition-all"
-              >
-                Crear lista
-              </button>
-            )
-          }
-        />
-      ) : (
-        <div className="flex flex-col gap-3">
-          {listasFiltradas.map((lista) => (
-            <ListaCard key={lista.id} lista={lista} onEliminar={handleEliminar} />
-          ))}
-        </div>
-      )}
-
-      {/* FAB */}
-      <button
-        onClick={() => navigate('/crear')}
-        className="fixed bottom-24 right-4 w-14 h-14 bg-primary-600 text-white rounded-2xl shadow-lg shadow-primary-200 flex items-center justify-center hover:bg-primary-700 active:scale-95 transition-all z-40"
-      >
-        <Plus size={24} />
-      </button>
-    </Layout>
+        <button
+          onClick={() => navigate('/crear')}
+          className="fixed bottom-20 right-4 w-14 h-14 bg-[#04bcd4] text-white rounded-full shadow-lg shadow-[#04bcd4]/40 flex items-center justify-center hover:bg-[#03aabf] active:scale-95 transition-all z-40"
+        >
+          <Plus size={26} />
+        </button>
+      </Layout>
+    </>
   )
 }

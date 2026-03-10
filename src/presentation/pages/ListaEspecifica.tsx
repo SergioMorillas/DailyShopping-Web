@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Plus, ShoppingCart, Check } from 'lucide-react'
+import { Plus, ShoppingCart, Check } from 'lucide-react'
+import { AppHeader } from '../components/AppHeader'
 import { Layout } from '../components/Layout'
 import { ProductoCard } from '../components/ProductoCard'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -32,142 +33,115 @@ export function ListaEspecifica() {
 
   const handleToggleMarked = useCallback((productoId: string) => {
     if (!listaActual) return
-    const nuevos = listaActual.productos.map((p) =>
-      p.id === productoId ? p.withMarked(!p.marked) : p
-    )
-    guardar(listaActual.withProductos(nuevos))
+    guardar(listaActual.withProductos(listaActual.productos.map(p => p.id === productoId ? p.withMarked(!p.marked) : p)))
   }, [listaActual, guardar])
 
   const handleIncrementar = useCallback((productoId: string) => {
     if (!listaActual) return
-    const nuevos = listaActual.productos.map((p) =>
-      p.id === productoId ? p.withAmount(p.amount + 1) : p
-    )
-    guardar(listaActual.withProductos(nuevos))
+    guardar(listaActual.withProductos(listaActual.productos.map(p => p.id === productoId ? p.withAmount(p.amount + 1) : p)))
   }, [listaActual, guardar])
 
   const handleDecrementar = useCallback((productoId: string) => {
     if (!listaActual) return
-    const nuevos = listaActual.productos
-      .map((p) => (p.id === productoId ? p.withAmount(Math.max(0, p.amount - 1)) : p))
-      .filter((p) => p.amount > 0)
-    guardar(listaActual.withProductos(nuevos))
+    guardar(listaActual.withProductos(
+      listaActual.productos.map(p => p.id === productoId ? p.withAmount(Math.max(0, p.amount - 1)) : p).filter(p => p.amount > 0)
+    ))
   }, [listaActual, guardar])
 
-  if (loading) return <Layout><LoadingSpinner /></Layout>
-  if (!listaActual) return <Layout><EmptyState icon={<ShoppingCart size={64} />} title="Lista no encontrada" description="Esta lista no existe o ha sido eliminada" /></Layout>
+  if (loading) return (
+    <>
+      <AppHeader title="..." showBack onBack={() => navigate('/listas')} />
+      <Layout><LoadingSpinner /></Layout>
+    </>
+  )
 
-  const marcados = listaActual.productos.filter((p) => p.marked).length
+  if (!listaActual) return (
+    <>
+      <AppHeader title="Lista no encontrada" showBack onBack={() => navigate('/listas')} />
+      <Layout><EmptyState icon={<ShoppingCart size={64} />} title="Lista no encontrada" description="Esta lista no existe" /></Layout>
+    </>
+  )
+
+  const marcados = listaActual.productos.filter(p => p.marked).length
   const total = listaActual.productos.length
 
   return (
-    <Layout>
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-50 pt-6 pb-4 -mx-4 px-4">
-        <div className="flex items-center gap-3 mb-3">
-          <button
-            onClick={() => navigate('/listas')}
-            className="p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
-          >
-            <ArrowLeft size={22} />
-          </button>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-bold text-lg text-gray-900 truncate">{listaActual.nombre}</h1>
-            <p className="text-xs text-gray-500">{listaActual.supermercado} · {listaActual.fechaFormateada}</p>
-          </div>
+    <>
+      <AppHeader
+        title={listaActual.nombre}
+        showBack
+        onBack={() => navigate('/listas')}
+        rightAction={
           <button
             onClick={() => navigate(`/lista/${id}/buscar`)}
-            className="p-2.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors flex-shrink-0"
+            className="w-10 h-10 flex items-center justify-center text-white hover:bg-white/10 rounded-xl transition-colors"
           >
-            <Plus size={20} />
+            <Plus size={24} />
           </button>
+        }
+      />
+
+      {/* Stats bar — 4 columns with cyan background */}
+      <div className="bg-[#04bcd4] text-white">
+        <div className="max-w-2xl mx-auto grid grid-cols-4 divide-x divide-white/20">
+          {[
+            { label: 'Media', value: `${listaActual.precioPromedio.toFixed(2)}€` },
+            { label: 'Pendiente', value: `${listaActual.precioSinMarcar.toFixed(2)}€` },
+            { label: 'En carro', value: `${listaActual.precioMarcado.toFixed(2)}€` },
+            { label: 'Total', value: `${listaActual.precioTotal.toFixed(2)}€` },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex flex-col items-center py-2.5 px-1">
+              <span className="text-[10px] font-semibold text-white/80 uppercase tracking-wide">{label}</span>
+              <span className="text-sm font-bold">{value}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Resumen de precios */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-white rounded-xl p-3 text-center border border-gray-100">
-            <p className="text-xs text-gray-500 mb-0.5">Total</p>
-            <p className="font-bold text-gray-900 text-base">{listaActual.precioTotal.toFixed(2)} €</p>
-          </div>
-          <div className="bg-primary-50 rounded-xl p-3 text-center border border-primary-100">
-            <p className="text-xs text-primary-600 mb-0.5 flex items-center justify-center gap-0.5">
-              <Check size={10} /> Marcado
-            </p>
-            <p className="font-bold text-primary-700 text-base">{listaActual.precioMarcado.toFixed(2)} €</p>
-          </div>
-          <div className="bg-amber-50 rounded-xl p-3 text-center border border-amber-100">
-            <p className="text-xs text-amber-600 mb-0.5">Pendiente</p>
-            <p className="font-bold text-amber-700 text-base">{listaActual.precioSinMarcar.toFixed(2)} €</p>
-          </div>
-        </div>
-
-        {/* Progreso */}
+        {/* Progress bar */}
         {total > 0 && (
-          <div className="mt-2">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>{marcados} de {total} artículos</span>
-              <span>{Math.round((marcados / total) * 100)}%</span>
+          <div className="max-w-2xl mx-auto px-3 pb-2">
+            <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+              <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${(marcados / total) * 100}%` }} />
             </div>
-            <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary-500 rounded-full transition-all duration-500"
-                style={{ width: `${(marcados / total) * 100}%` }}
-              />
-            </div>
+            <p className="text-xs text-white/80 text-center mt-1">{marcados} de {total} artículos marcados</p>
           </div>
         )}
       </div>
 
-      {/* Lista de productos */}
-      {listaActual.productos.length === 0 ? (
-        <EmptyState
-          icon={<ShoppingCart size={64} />}
-          title="Lista vacía"
-          description="Añade productos desde el buscador pulsando el botón +"
-          action={
-            <button
-              onClick={() => navigate(`/lista/${id}/buscar`)}
-              className="bg-primary-600 text-white px-6 py-3 rounded-2xl font-medium hover:bg-primary-700 active:scale-95 transition-all"
-            >
-              Buscar productos
-            </button>
-          }
-        />
-      ) : (
-        <div className="flex flex-col gap-3">
-          {/* Pendientes */}
-          {listaActual.productos.filter((p) => !p.marked).map((p) => (
-            <ProductoCard
-              key={p.id}
-              producto={p}
-              modo="lista"
-              onToggleMarked={handleToggleMarked}
-              onIncrementar={handleIncrementar}
-              onDecrementar={handleDecrementar}
+      <Layout>
+        <div className="pt-3">
+          {listaActual.productos.length === 0 ? (
+            <EmptyState
+              icon={<ShoppingCart size={64} />}
+              title="Lista vacía"
+              description="Añade productos pulsando el botón +"
+              action={
+                <button onClick={() => navigate(`/lista/${id}/buscar`)} className="bg-[#04bcd4] text-white px-6 py-3 rounded-2xl font-bold hover:bg-[#03aabf] active:scale-95 transition-all">
+                  Buscar productos
+                </button>
+              }
             />
-          ))}
-          {/* Marcados */}
-          {listaActual.productos.filter((p) => p.marked).length > 0 && (
-            <>
-              <div className="flex items-center gap-2 mt-2">
-                <div className="h-px flex-1 bg-gray-200" />
-                <span className="text-xs text-gray-400 font-medium">Ya en el carro</span>
-                <div className="h-px flex-1 bg-gray-200" />
-              </div>
-              {listaActual.productos.filter((p) => p.marked).map((p) => (
-                <ProductoCard
-                  key={p.id}
-                  producto={p}
-                  modo="lista"
-                  onToggleMarked={handleToggleMarked}
-                  onIncrementar={handleIncrementar}
-                  onDecrementar={handleDecrementar}
-                />
+          ) : (
+            <div className="flex flex-col gap-2">
+              {listaActual.productos.filter(p => !p.marked).map(p => (
+                <ProductoCard key={p.id} producto={p} modo="lista" onToggleMarked={handleToggleMarked} onIncrementar={handleIncrementar} onDecrementar={handleDecrementar} />
               ))}
-            </>
+              {listaActual.productos.filter(p => p.marked).length > 0 && (
+                <>
+                  <div className="flex items-center gap-2 mt-3 mb-1">
+                    <div className="h-px flex-1 bg-gray-300" />
+                    <span className="text-xs text-[#888888] font-semibold flex items-center gap-1"><Check size={12} /> Ya en el carro</span>
+                    <div className="h-px flex-1 bg-gray-300" />
+                  </div>
+                  {listaActual.productos.filter(p => p.marked).map(p => (
+                    <ProductoCard key={p.id} producto={p} modo="lista" onToggleMarked={handleToggleMarked} onIncrementar={handleIncrementar} onDecrementar={handleDecrementar} />
+                  ))}
+                </>
+              )}
+            </div>
           )}
         </div>
-      )}
-    </Layout>
+      </Layout>
+    </>
   )
 }

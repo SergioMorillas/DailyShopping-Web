@@ -1,6 +1,6 @@
 import { ListaCompra } from '../../domain/entities/ListaCompra'
 import { useNavigate } from 'react-router-dom'
-import { Trash2, ChevronRight, ShoppingBag } from 'lucide-react'
+import { Trash2, ChevronRight, ShoppingBag, Calendar } from 'lucide-react'
 import { SUPERMERCADO_COLORES } from '../../domain/entities/SupermercadoDisponible'
 
 interface ListaCardProps {
@@ -10,56 +10,56 @@ interface ListaCardProps {
 
 export function ListaCard({ lista, onEliminar }: ListaCardProps) {
   const navigate = useNavigate()
-  const color = SUPERMERCADO_COLORES[lista.supermercado] ?? '#059669'
+  const color = SUPERMERCADO_COLORES[lista.supermercado] ?? '#04bcd4'
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-      <div
-        className="h-1.5 w-full"
-        style={{ backgroundColor: color }}
-      />
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <button
-            className="flex-1 text-left"
-            onClick={() => navigate(`/lista/${lista.id}`)}
-          >
+    <div
+      className="bg-white rounded-2xl shadow-sm overflow-hidden active:scale-[0.99] transition-all"
+      style={{ borderLeft: `4px solid ${color}` }}
+    >
+      <button
+        className="w-full text-left p-4 pr-2"
+        onClick={() => navigate(`/lista/${lista.id}`)}
+      >
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <ShoppingBag size={16} className="text-gray-400" />
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <ShoppingBag size={14} className="text-[#04bcd4] flex-shrink-0" />
+              <span className="text-xs font-bold text-[#04bcd4] uppercase tracking-wider truncate">
                 {lista.supermercado}
               </span>
             </div>
-            <h3 className="font-semibold text-gray-900 text-base leading-snug">{lista.nombre}</h3>
-            <p className="text-xs text-gray-400 mt-1">{lista.fechaFormateada}</p>
-
-            <div className="flex items-center gap-4 mt-3">
-              <div>
-                <span className="text-xl font-bold text-gray-900">
-                  {lista.precioTotal.toFixed(2)} €
-                </span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-gray-500">
-                <span>{lista.cantidadProductos} artículos</span>
-              </div>
+            <p className="font-bold text-gray-900 text-base leading-tight truncate">{lista.nombre}</p>
+            <div className="flex items-center gap-1 mt-1.5">
+              <Calendar size={12} className="text-[#888888]" />
+              <span className="text-xs text-[#888888]">{lista.fechaFormateada}</span>
             </div>
-          </button>
+          </div>
 
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => lista.id && onEliminar(lista.id)}
-              className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
-            >
-              <Trash2 size={18} />
-            </button>
-            <button
-              onClick={() => navigate(`/lista/${lista.id}`)}
-              className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-colors"
-            >
-              <ChevronRight size={18} />
-            </button>
+          <div className="flex flex-col items-end gap-1 flex-shrink-0">
+            <span className="text-xl font-bold text-gray-900">{lista.precioTotal.toFixed(2)} €</span>
+            <span className="text-xs text-[#888888]">{lista.cantidadProductos} art.</span>
           </div>
         </div>
+      </button>
+
+      {/* Actions row */}
+      <div className="flex border-t border-gray-100">
+        <button
+          onClick={() => lista.id && onEliminar(lista.id)}
+          className="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-red-400 hover:bg-red-50 active:bg-red-100 transition-colors text-xs font-semibold"
+        >
+          <Trash2 size={15} />
+          Eliminar
+        </button>
+        <div className="w-px bg-gray-100" />
+        <button
+          onClick={() => navigate(`/lista/${lista.id}`)}
+          className="flex-1 py-2.5 flex items-center justify-center gap-1.5 text-[#04bcd4] hover:bg-[#04bcd4]/5 active:bg-[#04bcd4]/10 transition-colors text-xs font-semibold"
+        >
+          Ver lista
+          <ChevronRight size={15} />
+        </button>
       </div>
     </div>
   )
